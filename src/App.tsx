@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Header, Sidebar, MainLayout } from "@/components/layout";
 
 /*
   타입(Type) 정의
@@ -310,19 +312,15 @@ function App() {
 
   /*
     화면 렌더링
-    - header  : 페이지 상단 타이틀
-    - section : 왼쪽 영역 (게시글 목록, 스크롤 가능)
-    - aside   : 오른쪽 영역 (게시글 작성 폼, 고정)
+    - MainLayout : 전체 레이아웃 구조 (header, main, sidebar)
+    - Header     : 페이지 상단 타이틀
+    - Sidebar    : 오른쪽 영역 (게시글 작성 폼, 고정)
   */
   return (
-    <div className="h-screen flex flex-col">
-      <header className="px-6 py-4 border-b">
-        <h1 className="text-2xl font-bold">API 연동 학습 - JSONPlaceholder</h1>
-      </header>
-
-      <div className="flex flex-1 overflow-hidden">
-        {/* 왼쪽: 게시글 목록 */}
-        <section className="flex-1 flex flex-col overflow-hidden">
+    <MainLayout
+      header={<Header title="API 연동 학습 - JSONPlaceholder" />}
+      main={
+        <>
           <div className="p-6 pb-0">
             <h2 className="text-xl font-semibold mb-4">게시글 목록 (GET)</h2>
           </div>
@@ -374,18 +372,18 @@ function App() {
                         >
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon"
                             onClick={() => handleEdit(post)}
                           >
-                            수정
+                            <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon"
                             onClick={() => handleDelete(post.id)}
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
-                            삭제
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </CardContent>
@@ -403,7 +401,7 @@ function App() {
                 <div className="flex justify-center items-center gap-2">
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
                     onClick={() => {
                       const newPage = currentPage - 1;
                       setCurrentPage(newPage);
@@ -411,7 +409,7 @@ function App() {
                     }}
                     disabled={currentPage === 1}
                   >
-                    이전
+                    <ChevronLeft className="h-4 w-4" />
                   </Button>
                   <div className="flex gap-1">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -433,7 +431,7 @@ function App() {
                   </div>
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
                     onClick={() => {
                       const newPage = currentPage + 1;
                       setCurrentPage(newPage);
@@ -441,7 +439,7 @@ function App() {
                     }}
                     disabled={currentPage === totalPages}
                   >
-                    다음
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
                 <p className="text-center text-sm text-muted-foreground mt-2">
@@ -450,10 +448,10 @@ function App() {
               </div>
             </>
           )}
-        </section>
-
-        {/* 오른쪽: 게시글 작성/수정 폼 */}
-        <aside className="w-96 border-l bg-muted/30 p-6">
+        </>
+      }
+      sidebar={
+        <Sidebar>
           <Card>
             <CardHeader>
               <CardTitle>
@@ -512,8 +510,9 @@ function App() {
               </form>
             </CardContent>
           </Card>
-        </aside>
-      </div>
+        </Sidebar>
+      }
+    >
 
       {/* 게시글 상세 조회 Dialog */}
       <Dialog
@@ -586,7 +585,7 @@ function App() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </MainLayout>
   );
 }
 
